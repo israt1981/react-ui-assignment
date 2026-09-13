@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+
 import type { Technology } from '../../types/technology';
 
 interface StackProps {
