@@ -14,20 +14,26 @@ function App() {
   const [selectedTechs, setSelectedTechs] = useState<Technology[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // ⏳ Challenge: Loading state with useEffect
+  // Dynamic Fetching from Public Data Folder
   useEffect(() => {
-    import('./data/technologies.json')
+    fetch('/data/technologies.json')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch technologies data');
+        }
+        return res.json();
+      })
       .then((data) => {
-        setTechnologies(data.default as Technology[]);
+        setTechnologies(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Error fetching data:', err);
+        console.error('Error loading technologies:', err);
         setLoading(false);
       });
   }, []);
 
-  // 🔔 Challenge: React-Toastify Alerts
+  // Toast Alerts Logic
   const handleSelectTech = (tech: Technology) => {
     if (selectedTechs.some((t) => t.id === tech.id)) {
       toast.warning(`${tech.name} is already in your stack!`, {
@@ -74,7 +80,6 @@ function App() {
             </p>
           </div>
 
-          {/* ⏳ Loading Spinner State */}
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
@@ -106,7 +111,6 @@ function App() {
       </div>
 
       <Footer />
-      {/* Toast Notification Container */}
       <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
